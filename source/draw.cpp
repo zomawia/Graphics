@@ -1,3 +1,4 @@
+#include "graphics\RenderObjects.h"
 #include "graphics\draw.h"
 #include "glinc.h"
 
@@ -17,4 +18,30 @@ void s0_draw(const Framebuffer & f, const Shader & s, const Geometry & g)
 	// We provide how polygons will be formed and how many.
 
 	glDrawElements(GL_TRIANGLES, g.size, GL_UNSIGNED_INT, 0);
+}
+
+void setUniform(const Shader &s, int location, float value)
+{
+	glProgramUniform1f(s.handle, location, value);
+}
+
+void setUniform(const Shader & s, int location, int value)
+{	
+	
+	if (value == 1) {
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ZERO);
+	}
+	else {
+		glProgramUniform1f(s.handle, location, value);
+		glDisable(GL_BLEND);
+	}
+	
+}
+
+void clearFramebuffer(const Framebuffer & fb)
+{
+	glBindFramebuffer(GL_FRAMEBUFFER, fb.handle);
+	glClear(GL_COLOR_BUFFER_BIT);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
