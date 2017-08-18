@@ -25,7 +25,7 @@ int main() {
 	unsigned idxs[9] = { 0,1,2,3,4,5,6,7,8 };
 
 	Geometry g = makeGeometry(verts, 9, idxs, 9);
-	Geometry h = makeNGon(6, .5f);
+	Geometry h = makeCheckerboard(4, .35f);
 
 	const char* vsource =
 		"#version 450\n"
@@ -36,7 +36,7 @@ int main() {
 
 	const char* fsource =
 		"#version 450\n"
-		"in vec4 vColor;\n"
+		"flat in vec4 vColor;\n"
 		"out vec4 outColor;\n"
 		"void main () { outColor = vColor; }\n";
 
@@ -47,7 +47,7 @@ int main() {
 
 
 	while (context.step()) {		
-		s0_draw(f, s, g);		
+		//s0_draw(f, s, g);		
 
 		s0_draw(f, s, h);
 	}
