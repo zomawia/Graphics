@@ -3,11 +3,17 @@
 struct Geometry;
 struct Shader;
 struct Framebuffer;
+struct Texture;
 
 void s0_draw(const Framebuffer &f, const Shader &s, const Geometry&g);
+
+void clearFramebuffer(const Framebuffer &fb);
 
 void setUniform(const Shader &s, int location, float value);
 
 void setUniform(const Shader &s, int location, int value);
 
-void clearFramebuffer(const Framebuffer &fb);
+void setUniform(const Shader &s, int location, float x, float y);
+
+void setUniform(const Shader &s, int location, const Texture &value, unsigned slot);
+

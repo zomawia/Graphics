@@ -20,6 +20,13 @@ void s0_draw(const Framebuffer & f, const Shader & s, const Geometry & g)
 	glDrawElements(GL_TRIANGLES, g.size, GL_UNSIGNED_INT, 0);
 }
 
+void clearFramebuffer(const Framebuffer & fb)
+{
+	glBindFramebuffer(GL_FRAMEBUFFER, fb.handle);
+	glClear(GL_COLOR_BUFFER_BIT);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
 void setUniform(const Shader &s, int location, float value)
 {
 	glProgramUniform1f(s.handle, location, value);
@@ -33,15 +40,25 @@ void setUniform(const Shader & s, int location, int value)
 		glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ZERO);
 	}
 	else {
-		glProgramUniform1f(s.handle, location, value);
+		glProgramUniform1i(s.handle, location, value);
 		glDisable(GL_BLEND);
 	}
+}
+
+void setUniform(const Shader & s, int location, float x, float y)
+{
+	glProgramUniform1f(s.handle, location, x);
+	glProgramUniform1f(s.handle, location+1, y);
+}
+
+void setUniform(const Shader & s, int location, const Texture & value, unsigned slot)
+{
+	glActiveTexture(GL_TEXTURE0 + slot);
+	glBindTexture(GL_TEXTURE_2D, value.handle);
+
+	glProgramUniform1i(s.handle, location, slot);
+
 	
 }
 
-void clearFramebuffer(const Framebuffer & fb)
-{
-	glBindFramebuffer(GL_FRAMEBUFFER, fb.handle);
-	glClear(GL_COLOR_BUFFER_BIT);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-}
+
