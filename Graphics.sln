@@ -15,6 +15,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "02-UniText", "tests\02-UniT
 		{EEDFD4D5-F620-4EB6-9D2B-659F0E1FD7D7} = {EEDFD4D5-F620-4EB6-9D2B-659F0E1FD7D7}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "03-tdraw", "tests\03-tdraw\03-tdraw.vcxproj", "{69C1F08A-B7EB-4DE1-8C5E-DFA561949DAC}"
+	ProjectSection(ProjectDependencies) = postProject
+		{EEDFD4D5-F620-4EB6-9D2B-659F0E1FD7D7} = {EEDFD4D5-F620-4EB6-9D2B-659F0E1FD7D7}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -47,6 +52,14 @@ Global
 		{E8B960A9-DF55-4A8A-995C-AADD6FA1B745}.Release|x64.Build.0 = Release|x64
 		{E8B960A9-DF55-4A8A-995C-AADD6FA1B745}.Release|x86.ActiveCfg = Release|Win32
 		{E8B960A9-DF55-4A8A-995C-AADD6FA1B745}.Release|x86.Build.0 = Release|Win32
+		{69C1F08A-B7EB-4DE1-8C5E-DFA561949DAC}.Debug|x64.ActiveCfg = Debug|x64
+		{69C1F08A-B7EB-4DE1-8C5E-DFA561949DAC}.Debug|x64.Build.0 = Debug|x64
+		{69C1F08A-B7EB-4DE1-8C5E-DFA561949DAC}.Debug|x86.ActiveCfg = Debug|Win32
+		{69C1F08A-B7EB-4DE1-8C5E-DFA561949DAC}.Debug|x86.Build.0 = Debug|Win32
+		{69C1F08A-B7EB-4DE1-8C5E-DFA561949DAC}.Release|x64.ActiveCfg = Release|x64
+		{69C1F08A-B7EB-4DE1-8C5E-DFA561949DAC}.Release|x64.Build.0 = Release|x64
+		{69C1F08A-B7EB-4DE1-8C5E-DFA561949DAC}.Release|x86.ActiveCfg = Release|Win32
+		{69C1F08A-B7EB-4DE1-8C5E-DFA561949DAC}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
