@@ -20,6 +20,13 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "03-tdraw", "tests\03-tdraw\
 		{EEDFD4D5-F620-4EB6-9D2B-659F0E1FD7D7} = {EEDFD4D5-F620-4EB6-9D2B-659F0E1FD7D7}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "04-FromDisk", "tests\04-FromDisk\04-FromDisk.vcxproj", "{2261A9B2-D9E4-4683-8F0B-B984EF48B141}"
+	ProjectSection(ProjectDependencies) = postProject
+		{EEDFD4D5-F620-4EB6-9D2B-659F0E1FD7D7} = {EEDFD4D5-F620-4EB6-9D2B-659F0E1FD7D7}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "shaders", "resources\shaders\shaders.vcxproj", "{180022D7-8324-43A1-9115-73A613E88C99}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -60,6 +67,22 @@ Global
 		{69C1F08A-B7EB-4DE1-8C5E-DFA561949DAC}.Release|x64.Build.0 = Release|x64
 		{69C1F08A-B7EB-4DE1-8C5E-DFA561949DAC}.Release|x86.ActiveCfg = Release|Win32
 		{69C1F08A-B7EB-4DE1-8C5E-DFA561949DAC}.Release|x86.Build.0 = Release|Win32
+		{2261A9B2-D9E4-4683-8F0B-B984EF48B141}.Debug|x64.ActiveCfg = Debug|x64
+		{2261A9B2-D9E4-4683-8F0B-B984EF48B141}.Debug|x64.Build.0 = Debug|x64
+		{2261A9B2-D9E4-4683-8F0B-B984EF48B141}.Debug|x86.ActiveCfg = Debug|Win32
+		{2261A9B2-D9E4-4683-8F0B-B984EF48B141}.Debug|x86.Build.0 = Debug|Win32
+		{2261A9B2-D9E4-4683-8F0B-B984EF48B141}.Release|x64.ActiveCfg = Release|x64
+		{2261A9B2-D9E4-4683-8F0B-B984EF48B141}.Release|x64.Build.0 = Release|x64
+		{2261A9B2-D9E4-4683-8F0B-B984EF48B141}.Release|x86.ActiveCfg = Release|Win32
+		{2261A9B2-D9E4-4683-8F0B-B984EF48B141}.Release|x86.Build.0 = Release|Win32
+		{180022D7-8324-43A1-9115-73A613E88C99}.Debug|x64.ActiveCfg = Debug|x64
+		{180022D7-8324-43A1-9115-73A613E88C99}.Debug|x64.Build.0 = Debug|x64
+		{180022D7-8324-43A1-9115-73A613E88C99}.Debug|x86.ActiveCfg = Debug|Win32
+		{180022D7-8324-43A1-9115-73A613E88C99}.Debug|x86.Build.0 = Debug|Win32
+		{180022D7-8324-43A1-9115-73A613E88C99}.Release|x64.ActiveCfg = Release|x64
+		{180022D7-8324-43A1-9115-73A613E88C99}.Release|x64.Build.0 = Release|x64
+		{180022D7-8324-43A1-9115-73A613E88C99}.Release|x86.ActiveCfg = Release|Win32
+		{180022D7-8324-43A1-9115-73A613E88C99}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
