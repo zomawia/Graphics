@@ -35,6 +35,9 @@ Geometry makeGeometry(const Vertex * vertices, size_t vsize, const unsigned * in
 	glEnableVertexAttribArray(2);
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)32);
 
+	glEnableVertexAttribArray(3);
+	glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)40);
+
 	//unbind the VAO first, otherwise the VAO will dissociate from the VBO and IBO
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);

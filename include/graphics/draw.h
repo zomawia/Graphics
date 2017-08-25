@@ -3,14 +3,18 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/type_ptr.hpp"
 
+enum RenderFlag { DEPTH = 1 };
+
 struct Geometry;
 struct Shader;
 struct Framebuffer;
 struct Texture;
 
+void setFlags(int flags);
+
 void s0_draw(const Framebuffer &f, const Shader &s, const Geometry&g);
 
-void clearFramebuffer(const Framebuffer &fb);
+void clearFramebuffer(const Framebuffer &fb, bool color = true, bool depth = true);
 
 void setUniform(const Shader &s, int location, float value);
 

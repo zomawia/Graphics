@@ -2,6 +2,15 @@
 #include "graphics\draw.h"
 #include "glinc.h"
 
+void setFlags(int flags)
+{
+	// depth testing
+	if (flags & RenderFlag::DEPTH) 
+		glEnable(GL_DEPTH_TEST);
+	else 
+		glDisable(GL_DEPTH_TEST);
+}
+
 void s0_draw(const Framebuffer & f, const Shader & s, const Geometry & g)
 {
 	// First we need to scope all of the OpenGL objects that we’ll be using.
@@ -20,10 +29,10 @@ void s0_draw(const Framebuffer & f, const Shader & s, const Geometry & g)
 	glDrawElements(GL_TRIANGLES, g.size, GL_UNSIGNED_INT, 0);
 }
 
-void clearFramebuffer(const Framebuffer & fb)
+void clearFramebuffer(const Framebuffer & fb, bool color, bool depth)
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, fb.handle);
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT * color | GL_DEPTH_BUFFER_BIT * depth);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 

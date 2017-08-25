@@ -15,10 +15,16 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="test.vert">
+    <None Include="cube.frag">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="cube.vert">
       <Filter>Source Files</Filter>
     </None>
     <None Include="test.frag">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="test.vert">
       <Filter>Source Files</Filter>
     </None>
   </ItemGroup>
