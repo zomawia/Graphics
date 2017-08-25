@@ -15,23 +15,8 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="cube.frag">
+    <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
-    </None>
-    <None Include="cube.vert">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="test.frag">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="test.vert">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="mvplite.vert">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="mvplite.frag">
-      <Filter>Source Files</Filter>
-    </None>
+    </ClCompile>
   </ItemGroup>
 </Project>
