@@ -33,7 +33,9 @@
     <None Include="mvplite.frag">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="lambert.vert" />
+    <None Include="point.vert" />
+    <None Include="point.frag" />
     <None Include="lambert.frag" />
+    <None Include="lambert.vert" />
   </ItemGroup>
 </Project>

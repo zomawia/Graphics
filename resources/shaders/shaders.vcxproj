@@ -114,6 +114,8 @@
     <None Include="cube.vert" />
     <None Include="lambert.frag" />
     <None Include="lambert.vert" />
+    <None Include="point.frag" />
+    <None Include="point.vert" />
     <None Include="mvplite.frag" />
     <None Include="mvplite.vert" />
     <None Include="test.frag" />
