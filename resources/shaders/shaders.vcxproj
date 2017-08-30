@@ -118,6 +118,8 @@
     <None Include="point.vert" />
     <None Include="mvplite.frag" />
     <None Include="mvplite.vert" />
+    <None Include="standard.frag" />
+    <None Include="standard.vert" />
     <None Include="test.frag" />
     <None Include="test.vert" />
   </ItemGroup>

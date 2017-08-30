@@ -1,10 +1,47 @@
+#define GLM_FORCE_SWIZZLE
+
 #include "..\include\graphics\RenderObjects.h"
 #include "glinc.h"
 #include "graphics\Vertex.h"
 
+#include "glm\ext.hpp"
+
+
+
 #ifdef _DEBUG
 #include <iostream>
 #endif
+
+glm::vec4 calcTangent(const Vertex &v0, const Vertex &v1, const Vertex &v2)
+{
+	// Calculate the left and right edge of the triangle
+	glm::vec4 p1 = v1.position - v0.position;
+	glm::vec4 p2 = v2.position - v0.position;
+
+	// calculate the left and right edge of the triangle's UVs
+	glm::vec2 t1 = v1.texCoord - v0.texCoord;
+	glm::vec2 t2 = v2.texCoord - v0.texCoord;
+
+	// Rotate the position edge to line up with the texture edge and normalize
+	return glm::normalize((p1*t2.y - p2*t1.y) / (t1.x*t2.y - t1.y*t2.x));
+}
+
+void solveTangents(Vertex * v, size_t vsize, const unsigned * idxs, size_t isize)
+{
+	// for each triangle
+	for (int i = 0; i < isize; i += 3)
+	{
+		glm::vec4 T = calcTangent(v[idxs[i + 0]], v[idxs[i + 1]], v[idxs[i + 2]]);
+
+		// Average tangents out for each vertex
+		for (int j = 0; j < 3; ++j)
+			v[idxs[i + j]].tangent = glm::normalize(T + v[idxs[i + j]].tangent);
+	}	
+
+	// Evaluate bitangent afterward
+	for (int i = 0; i < vsize; ++i)
+		v[i].bitangent = glm::vec4(glm::cross(v[i].normal.xyz(), v[i].tangent.xyz()), 0);
+}
 
 Geometry makeGeometry(const Vertex * vertices, size_t vsize, const unsigned * indices, size_t isize)
 {	
@@ -26,17 +63,24 @@ Geometry makeGeometry(const Vertex * vertices, size_t vsize, const unsigned * in
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, isize * sizeof(unsigned), indices, GL_STATIC_DRAW);	
 
 	// activate an attribute and then provide details about that attribute
+	//pos
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
-
+	//color
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)16);
-
+	//tex coords
 	glEnableVertexAttribArray(2);
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)32);
-
+	//normals
 	glEnableVertexAttribArray(3);
 	glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)40);
+	//tangent
+	glEnableVertexAttribArray(4);
+	glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)56);
+	//bitangent
+	glEnableVertexAttribArray(5);
+	glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)72);
 
 	//unbind the VAO first, otherwise the VAO will dissociate from the VBO and IBO
 	glBindVertexArray(0);

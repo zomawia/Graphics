@@ -43,9 +43,9 @@ int main()
 		glm::mat4 modquad = glm::rotate(glm::radians(90.0f), glm::vec3(-1, 0, 0)) *
 			glm::scale(glm::vec3(8, 8, 1));
 
-		glm::vec3 dl_dir = glm::normalize(glm::vec3(1, -1, 1));
+		glm::vec3 dl_dir = glm::normalize(glm::vec3(3, -1, 1));
 
-		glm::vec3 dl_pos = glm::vec3(3, 2, 3);
+		glm::vec3 dl_pos = glm::vec3(-1, 1, 1);
 		glm::vec4 dl_col = glm::vec4(1, 1, 1, 1);
 
 		clearFramebuffer(screen);

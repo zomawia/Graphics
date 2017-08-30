@@ -8,6 +8,9 @@ struct Geometry {
 	unsigned handle, vbo, ibo, size;
 };
 
+void solveTangents(Vertex *v, size_t vsize, const unsigned *idxs, size_t isize);
+
+
 Geometry makeGeometry(const Vertex *vertices, size_t vsize, 
 	const unsigned *indices, size_t isize);
 

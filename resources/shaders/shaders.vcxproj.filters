@@ -37,5 +37,7 @@
     <None Include="point.frag" />
     <None Include="lambert.frag" />
     <None Include="lambert.vert" />
+    <None Include="standard.vert" />
+    <None Include="standard.frag" />
   </ItemGroup>
 </Project>

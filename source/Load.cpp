@@ -109,6 +109,8 @@ Geometry loadGeometry(const char *path)
 	}
 	///////////////////////////////////////////////////////////////////
 
+	solveTangents(verts, vsize, indices, isize);
+
 	retval = makeGeometry(verts, vsize, indices, isize);
 
 	delete[] verts;
