@@ -11,9 +11,7 @@ vec4 vPos;
 void main()
 {
 	vPos = position;
-	vPos.x += sin(time);
-	vPos.y += sin(time * 2);
-	vPos.z += sin(time / 2);
+
 
 	gl_Position = vPos;
 
