@@ -23,6 +23,12 @@ layout(location =  9) uniform float l_intensity;
 layout(location = 10) uniform vec4  l_ambient;
 layout(location = 11) uniform int   light_type; // 0=dir, 1=pnt
 
+//output variables // 4 targets, 3 color, 1 float
+layout(location = 0) out vec4 outFinal;
+layout(location = 1) out vec4 outDiffuse;
+layout(location = 2) out vec4 outSpecular;
+layout(location = 3) out vec4 outNormal;
+
 // illumination model factors
 float calc_lambert(in vec3 N, in vec3 L);
 // PHONG
@@ -58,11 +64,13 @@ void main()
 
 	// calculate color terms
 	vec4 outAmbient  = diffuse * ambi * l_ambient;
-	vec4 outDiffuse  = diffuse * lamb * l_color * l_intensity * attenuation;
-	vec4 outSpecular = specular * spec * l_color * l_intensity;
+	outDiffuse  = diffuse * lamb * l_color * l_intensity * attenuation;
+	outSpecular = specular * spec * l_color * l_intensity;
 
-	outColor = outAmbient + outDiffuse + outSpecular;
-	//outColor = outSpecular;
+	outNormal = vec4(normal,0);
+
+	outFinal = outAmbient + outDiffuse + outSpecular;
+	
 }
 
 
