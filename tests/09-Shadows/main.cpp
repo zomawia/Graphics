@@ -24,7 +24,8 @@ int main()
 	glm::mat4 floor_model = glm::rotate(glm::radians(90.f), glm::vec3(-1, 0, 0))
 		* glm::scale(glm::vec3(5, 5, 1));
 
-	Texture ss_diffuse = loadTexture("../../resources/textures/coolcat.jpg");
+	Texture coolcat = loadTexture("../../resources/textures/coolcat.jpg");
+	Texture coolguy = loadTexture("../../resources/textures/coolguy.jpg");
 
 	//////////////////////////
 	// SoulSpear
@@ -52,7 +53,7 @@ int main()
 
 	glm::vec3 light_dir2 = glm::normalize(glm::vec3(-.6, -.58, -1));
 	glm::mat4 light_proj2 = glm::ortho<float>(-10, 10, -10, 10, -10, 10);
-	glm::mat4 light_view2 = glm::lookAt(-light_dir, glm::vec3(1, 0, 0), glm::vec3(0, 1, 0));
+	glm::mat4 light_view2 = glm::lookAt(-light_dir2, glm::vec3(2, 0, 0), glm::vec3(3, 1, 0));
 
 	glm::vec4 color1 = glm::vec4(1, 1, 0, .5);
 	glm::vec4 color2 = glm::vec4(0, 1, 1, .5);
@@ -65,7 +66,7 @@ int main()
 		"../../resources/shaders/direct.frag");
 
 	// Buffers
-	Framebuffer fb_shadow = makeFramebuffer(2048, 2048, 0, true, 0, 0);
+	Framebuffer fb_shadow = makeFramebuffer(256, 256, 0, true, 0, 0);
 	Framebuffer fb_shadow2 = makeFramebuffer(2048, 2048, 0, true, 0, 0);
 	Framebuffer screen = { 0,1280, 720 };
 
@@ -75,12 +76,11 @@ int main()
 	
 		// Shadow Pass
 		setFlags(RenderFlag::DEPTH);
-		clearFramebuffer(fb_shadow, false, true);
-		
+		clearFramebuffer(fb_shadow, false, true);		
 
 		int loc = 0; int slot = 0;
 
-		ss_model = glm::rotate(time, glm::vec3(0, 1, 0));
+		ss_model = glm::translate(glm::vec3(sin(time), sin(time), 0)) * glm::rotate(time, glm::vec3(0, 1, 0));
 
 		loc = slot = 0;
 		setUniforms(shdr_shadow, loc, slot, light_proj, light_view, floor_model);
@@ -93,9 +93,10 @@ int main()
 		loc = slot = 0;
 		setUniforms(shdr_shadow, loc, slot, light_proj, light_view, ss_model);
 		s0_draw(fb_shadow, shdr_shadow, ss_geo);
-
+		
+		// Second Shadow Pass
+		setFlags(RenderFlag::DEPTH);
 		clearFramebuffer(fb_shadow2, false, true);
-
 		loc = slot = 0;
 		setUniforms(shdr_shadow, loc, slot, light_proj2, light_view2, floor_model);
 		s0_draw(fb_shadow2, shdr_shadow, floor_geo);
@@ -108,17 +109,19 @@ int main()
 		setUniforms(shdr_shadow, loc, slot, light_proj2, light_view2, ss_model);
 		s0_draw(fb_shadow2, shdr_shadow, ss_geo);
 
-
 		// Light Pass		
 		setFlags(RenderFlag::DEPTH);
 		clearFramebuffer(screen);
 
 		loc = slot = 0;
 		setUniforms(shdr_direct, loc, slot,
-			cam_proj, cam_view,     // Camera Data
-			floor_model,            // Geometry Data
-			light_proj, light_view, // Light Data
-			fb_shadow.depthTarget, color1);  // Shadow Map
+			cam_proj, cam_view,     
+			floor_model,            
+			light_proj, light_view, 
+			fb_shadow.depthTarget, 
+			light_proj2, light_view2,
+			fb_shadow2.depthTarget,
+			coolguy);
 		s0_draw(screen, shdr_direct, floor_geo);
 
 		loc = slot = 0;
@@ -126,25 +129,35 @@ int main()
 			cam_proj, cam_view,
 			cube_model,
 			light_proj, light_view,
-			fb_shadow.depthTarget, color1);
+			fb_shadow.depthTarget, 
+			light_proj2, light_view2,
+			fb_shadow2.depthTarget,
+			coolguy);
 		s0_draw(screen, shdr_direct, cube_geo);
 
-
-		//2
 		loc = slot = 0;
 		setUniforms(shdr_direct, loc, slot,
 			cam_proj, cam_view,
 			ss_model,
+			light_proj, light_view,
+			fb_shadow.depthTarget, 
 			light_proj2, light_view2,
-			fb_shadow2.depthTarget, color2);
+			fb_shadow2.depthTarget,
+			coolcat);
 		s0_draw(screen, shdr_direct, ss_geo);
-
-		loc = slot = 0;
-		setUniforms(shdr_direct, loc, slot,
-			cam_proj, cam_view,
-			cube_model,
-			light_proj2, light_view2,
-			fb_shadow2.depthTarget, color2);
-		s0_draw(screen, shdr_direct, cube_geo);
 	}
+
+	FreeFramebuffer(fb_shadow);
+	FreeFramebuffer(fb_shadow2);
+
+	FreeFramebuffer(screen);
+
+	freeGeometry(ss_geo);
+	freeGeometry(cube_geo);
+	freeGeometry(floor_geo);
+
+	freeShader(shdr_direct);
+	freeShader(shdr_shadow);
+
+	context.exit();
 }

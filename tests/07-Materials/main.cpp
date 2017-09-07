@@ -1,5 +1,6 @@
 #include "graphics\Context.h"
 #include "graphics\RenderObjects.h"
+#include "graphics\GameObjects.h"
 #include "graphics\Vertex.h"
 #include "graphics\draw.h"
 #include "graphics\Load.h"
@@ -27,29 +28,32 @@ int main()
 
 	////////////////////////
 	/// Model Data
-	Geometry  ss_geo = loadGeometry("../../resources/models/soulspear.obj");
-	glm::mat4 ss_model;
+	SpecGloss specgloss[2];
+	specgloss[0].geo = loadGeometry("../../resources/models/soulspear.obj");
+	specgloss[0].model;
 
-	Texture   ss_normal = loadTexture("../../resources/textures/soulspear_normal.tga");
-	Texture   ss_diffuse = loadTexture("../../resources/textures/coolcat.jpg");
-	Texture   ss_specular = loadTexture("../../resources/textures/soulspear_specular.tga");
-	float     ss_gloss = 8;
+	specgloss[0].normal = loadTexture("../../resources/textures/soulspear_normal.tga");
+	specgloss[0].diffuse = loadTexture("../../resources/textures/coolcat.jpg");
+	specgloss[0].specular = loadTexture("../../resources/textures/soulspear_specular.tga");
+	specgloss[0].gloss = 8;
 
 	//////////////////////////
 	// Camera Data
-	glm::mat4 cam_view = glm::lookAt(
+	Camera cam;
+	cam.view = glm::lookAt(
 		glm::vec3(0, 2, 3),
 		glm::vec3(0, 2, 0),
 		glm::vec3(0, 1, 0));
-	glm::mat4 cam_proj = glm::perspective(45.f, 1280.f / 720.f, 1.f, 5.f);
+	cam.proj = glm::perspective(45.f, 1280.f / 720.f, 1.f, 5.f);
 
 	//////////////////////////
 	// Light
-	glm::vec3 l_dir = glm::normalize(glm::vec3(.2, -1, -1));
-	glm::vec4 l_color = glm::vec4(1.0, .5, 1.0, 1);
-	float     l_intensity = 4.0;
-	glm::vec4 l_ambient = glm::vec4(.2, .5, .1, 1);
-	int		  l_type = 0;	
+	StandardLight l;
+	l.dir		= glm::normalize(glm::vec3(.2, -1, -1));
+	l.color		= glm::vec4(1.0, .5, 1.0, 1);
+	l.intensity = 4.0;
+	l.ambient	= glm::vec4(.2, .5, .1, 1);
+	l.type		= 0;	
 
 	Framebuffer fBuffer = makeFramebuffer(1280, 720, 4, true, 3, 1);
 
@@ -60,7 +64,7 @@ int main()
 	{
 		float time = context.getTime();
 		float time2 = context.getTime();
-		ss_model = glm::rotate(time, glm::vec3(1, 1, 0));
+		specgloss[0].model = glm::rotate(time, glm::vec3(1, 1, 0));
 
 		////////////////////
 		// frame buffer pass
@@ -69,12 +73,13 @@ int main()
 
 		int loc = 0, slot = 0;
 		setUniforms(standard, loc, slot,
-			cam_proj, cam_view,	// Camera data!
-			ss_model, ss_diffuse, ss_specular, ss_normal, ss_gloss, // model data!
-			l_dir, l_color, l_intensity, l_ambient, l_type		  // light data!
+			cam.proj, cam.view,	// Camera data!
+			specgloss[0].model, specgloss[0].diffuse, specgloss[0].specular, 
+			specgloss[0].normal, specgloss[0].gloss, // model data!
+			l.dir, l.color, l.intensity, l.ambient, l.type		  // light data!
 		);
 
-		s0_draw(fBuffer, standard, ss_geo);
+		s0_draw(fBuffer, standard, specgloss[0].geo);
 		
 		////////////////
 		// screen pass	
