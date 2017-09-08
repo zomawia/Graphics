@@ -27,7 +27,7 @@ int main()
 		"../../resources/shaders/standard.frag");
 
 	////////////////////////
-	/// Model Data
+	// Model Data
 	SpecGloss specgloss[2];
 	specgloss[0].geo = loadGeometry("../../resources/models/soulspear.obj");
 	specgloss[0].model;

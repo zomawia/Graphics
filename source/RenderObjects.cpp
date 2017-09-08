@@ -249,3 +249,39 @@ void FreeFramebuffer(Framebuffer & fb)
 	glDeleteFramebuffers(1, &fb.handle);
 	fb = { 0,0,0,0 };
 }
+
+CubeTexture makeCubeMap(unsigned w, unsigned h, unsigned c, const void * pixels, bool isFloat)
+{
+	CubeTexture retval = { 0 };
+
+	GLenum f = 0, i = 0;
+
+	switch (c) {
+	case 0: f = GL_DEPTH_COMPONENT; i = GL_DEPTH24_STENCIL8; break;
+	case 1: f = GL_RED;				i = GL_R32F; break;
+	case 2: f = GL_RG;				i = GL_RG32F; break;
+	case 3: f = GL_RGB;				i = GL_RGB32F; break;
+	case 4: f = GL_RGBA;			i = GL_RGBA32F; break;
+	}
+
+	// Generate texture and bind it to the retval
+	glGenTextures(1, &retval.handle);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, retval.handle);
+
+	// Assign texture to each side of cube	
+	for (int i = 0; i < 6; ++i)
+	{
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, ((isFloat || c == 0) ? i : f), 
+			w, h, 0, f,	(isFloat ? GL_FLOAT : GL_UNSIGNED_BYTE), pixels);
+	}
+
+	// Specify wrapping and filtering methods
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+	return retval;
+}
+

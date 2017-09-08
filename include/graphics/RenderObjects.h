@@ -27,10 +27,20 @@ struct Texture {
 	unsigned handle;
 };
 
+struct CubeTexture {
+	unsigned handle;
+};
+
 struct Framebuffer {
 	unsigned handle, width, height, nTargets;
 	Texture depthTarget;
 	Texture targets[8];
+};
+
+struct CubeFramebuffer {
+	unsigned handle, width, height, nTargets;
+	CubeTexture depthTarget;
+	CubeTexture targets[8];
 };
 
 
@@ -40,5 +50,10 @@ void freeTexture(Texture &t);
 
 Framebuffer makeFramebuffer(unsigned w, unsigned h, unsigned c,
 	bool hasDepth, unsigned nTargets, unsigned nFloatTargets);
-
 void FreeFramebuffer(Framebuffer &fb);
+
+CubeTexture makeCubeMap(unsigned w, unsigned h, unsigned c,
+	const void *pixels, bool isFloat = false);
+
+CubeFramebuffer makeCubeFramebuffer(unsigned w, unsigned h, unsigned c,
+	bool hasDepth, unsigned nTargets, unsigned nFloatTargets);

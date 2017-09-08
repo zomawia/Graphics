@@ -1,10 +1,12 @@
 #include <string>
 #include <fstream>
 #include <iostream>
+#include <random>
+
+#include "glm\ext.hpp"
 
 #include "graphics\Load.h"
 #include "graphics\RenderObjects.h"
-
 #include "graphics\Vertex.h"
 
 #define STB_IMAGE_IMPLEMENTATION
@@ -13,29 +15,14 @@
 #define TINYOBJLOADER_IMPLEMENTATION
 #include "OBJ\tiny_obj_loader.h"
 
-#include <random>
+
 
 glm::vec4 randColor()
 {
 	return {rand() / (float)RAND_MAX, rand() / (float)RAND_MAX, rand() / (float)RAND_MAX, 1};
 }
 
-Texture loadTexture(const char * path)
-{
-	Texture retval = { 0 };
 
-	int w, h, c;
-	unsigned char *pixels;
-
-	stbi_set_flip_vertically_on_load(true);
-
-	pixels = stbi_load(path, &w, &h, &c, STBI_default);
-
-	retval = makeTexture(w, h, c, pixels);
-	stbi_image_free(pixels);	
-
-	return retval;
-}
 
 std::string readFile(const char *filePath) {
 	//http://www.nexcius.net/2012/11/20/how-to-load-a-glsl-shader-in-opengl-using-c/
@@ -117,3 +104,57 @@ Geometry loadGeometry(const char *path)
 	delete[] indices;
 	return retval;
 }
+
+Texture loadTexture(const char * path)
+{
+	Texture retval = { 0 };
+
+	int w, h, c;
+	unsigned char *pixels;
+
+	stbi_set_flip_vertically_on_load(true);
+
+	pixels = stbi_load(path, &w, &h, &c, STBI_default);
+
+	retval = makeTexture(w, h, c, pixels);
+	stbi_image_free(pixels);
+
+	return retval;
+}
+
+CubeTexture loadCubeMap(const char * path_Xpos, const char * path_Xneg, const char * path_Ypos, const char * path_Yneg, const char * path_Zpos, const char * path_Zneg)
+{
+	CubeTexture retval = { 0 };
+
+	int w, h, c;
+	unsigned char **pixels = new unsigned char*[6];
+
+	stbi_set_flip_vertically_on_load(true);
+
+	pixels[0] = stbi_load(path_Xpos, &w, &h, &c, STBI_default);
+	pixels[1] = stbi_load(path_Xneg, &w, &h, &c, STBI_default);
+	
+	pixels[2] = stbi_load(path_Ypos, &w, &h, &c, STBI_default);
+	pixels[3] = stbi_load(path_Yneg, &w, &h, &c, STBI_default);
+
+	pixels[4] = stbi_load(path_Zpos, &w, &h, &c, STBI_default);
+	pixels[5] = stbi_load(path_Zneg, &w, &h, &c, STBI_default);
+
+	retval = makeCubeMap(w, h, c, pixels);
+	stbi_image_free(pixels);
+
+	return retval;
+}
+
+CubeTexture loadCubeMap(std::vector<std::string> faces)
+{
+	CubeTexture retval = { 0 };
+
+	//todo
+
+	return retval;
+}
+
+
+
+

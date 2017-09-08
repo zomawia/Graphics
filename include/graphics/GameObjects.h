@@ -67,9 +67,9 @@ struct SimplePresetScene
 };
 
 namespace __internal
-{
-	
+{	
 	void t_setUniform(const Shader &s, int &loc_io, int &tex_io, const Camera &val);
 	void t_setUniform(const Shader &s, int &loc_io, int &tex_io, const SpecGloss &val);
 	void t_setUniform(const Shader &s, int &loc_io, int &tex_io, const DirectionalLight &val);
+	void t_setUniform(const Shader &s, int &loc_io, int &tex_io, const CubeTexture &val);
 }

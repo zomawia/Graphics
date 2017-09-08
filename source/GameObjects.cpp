@@ -28,6 +28,11 @@ void __internal::t_setUniform(const Shader & s, int & loc_io, int & tex_io, cons
 	__internal::t_setUniform(s, loc_io, tex_io, val.intensity);	//3
 }
 
+void __internal::t_setUniform(const Shader & s, int & loc_io, int & tex_io, const CubeTexture & val)
+{
+	// todo
+}
+
 SimplePresetScene::SimplePresetScene()
 {
 	// floor
