@@ -9,6 +9,13 @@ void setFlags(int flags)
 		glEnable(GL_DEPTH_TEST);
 	else 
 		glDisable(GL_DEPTH_TEST);
+
+	if (flags &RenderFlag::ADDITIVE) {
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_ONE, GL_ONE);
+	}
+
+	else glDisable(GL_BLEND);
 }
 
 void s0_draw(const Framebuffer & f, const Shader & s, const Geometry & g)
@@ -26,7 +33,9 @@ void s0_draw(const Framebuffer & f, const Shader & s, const Geometry & g)
 	// Drawing is performed using the index buffer. 
 	// We provide how polygons will be formed and how many.
 
-	glDrawElements(GL_TRIANGLES, g.size, GL_UNSIGNED_INT, 0);
+
+	glDrawElements(GL_TRIANGLE_FAN, g.size, GL_UNSIGNED_INT, 0);
+	//glDrawElements(GL_TRIANGLES, g.size, GL_UNSIGNED_INT, 0);
 }
 
 void clearFramebuffer(const Framebuffer & fb, bool color, bool depth)

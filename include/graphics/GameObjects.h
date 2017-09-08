@@ -5,22 +5,6 @@
 
 #include "RenderObjects.h"
 
-struct Transform
-{
-	glm::vec3 position;
-	glm::vec3 scale;
-	glm::mat3 rotation; // best to use an interface or helper function
-
-	Transform *parent = nullptr;
-
-	glm::mat4 getLocal() const; // evaluate local matrix: (T*R*S)
-	glm::mat4 getGlobal() const; // evaluate global: parent.global * local
-
-								 // helpers for setting a meaningful rotation:
-	void axisAngle(float angle, const glm::vec3 &axis = { 0,1,0 });
-	void lookAt(const glm::vec3 &target, const glm::vec3 &up = { 0,1,0 });
-};
-
 struct Camera
 {
 	glm::mat4 proj;
@@ -47,33 +31,45 @@ struct StandardLight
 	int type;
 };
 
-struct Mesh
+// 0: proj, 1: view, 2: color, 3: intensity
+struct DirectionalLight
 {
-	Transform transform;
 
-	Geometry geometry;
+	glm::vec3 target; // for shadow mapping
+	float range;	  // for shadow mapping
+
+	glm::vec3 direction;
+
+	// 0
+	glm::mat4 getProj() const
+	{
+		return glm::ortho<float>(-range, range, -range, range, -range, range);
+	}
+
+	// 1
+	glm::mat4 getView() const
+	{
+		return glm::lookAt(-direction + target, target, glm::vec3(0, 1, 0));
+	}
+
+	glm::vec4 color; // 2
+	float intensity; // 3
 };
 
-struct FlyCam
+
+struct SimplePresetScene
 {
-	Camera camera;
+	Camera cam;
+	SpecGloss go[3];
+	DirectionalLight dl[2];
 
-	float speed;
-	// add any members needed to keep track of input
-
-
-	// Check input and modify camera.transform accordingly
-	void update(float dt);
+	SimplePresetScene();
 };
 
-struct OrbitCam
+namespace __internal
 {
-	Camera camera;
-
-	float speed;
-	// add any members needed to keep track of input
-	glm::vec3 target;
-
-	// Check input and modify camera.transform accordingly
-	void update(float dt);
-};
+	
+	void t_setUniform(const Shader &s, int &loc_io, int &tex_io, const Camera &val);
+	void t_setUniform(const Shader &s, int &loc_io, int &tex_io, const SpecGloss &val);
+	void t_setUniform(const Shader &s, int &loc_io, int &tex_io, const DirectionalLight &val);
+}

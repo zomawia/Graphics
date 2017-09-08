@@ -3,7 +3,11 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/type_ptr.hpp"
 
-enum RenderFlag { DEPTH = 1 };
+enum RenderFlag { 
+	NONE = 0,
+	DEPTH = 1,
+	ADDITIVE = 2,
+};
 
 struct Geometry;
 struct Shader;
