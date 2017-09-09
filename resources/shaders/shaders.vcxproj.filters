@@ -52,5 +52,6 @@
     <None Include="lpassD.frag" />
     <None Include="lpassD.vert" />
     <None Include="cubemap.frag" />
+    <None Include="cubemap.vert" />
   </ItemGroup>
 </Project>

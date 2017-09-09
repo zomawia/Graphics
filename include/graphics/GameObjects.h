@@ -31,6 +31,11 @@ struct StandardLight
 	int type;
 };
 
+struct CubeMap
+{
+	CubeTexture right, left, top, bottom, back, front;
+};
+
 // 0: proj, 1: view, 2: color, 3: intensity
 struct DirectionalLight
 {
@@ -71,5 +76,4 @@ namespace __internal
 	void t_setUniform(const Shader &s, int &loc_io, int &tex_io, const Camera &val);
 	void t_setUniform(const Shader &s, int &loc_io, int &tex_io, const SpecGloss &val);
 	void t_setUniform(const Shader &s, int &loc_io, int &tex_io, const DirectionalLight &val);
-	void t_setUniform(const Shader &s, int &loc_io, int &tex_io, const CubeTexture &val);
 }

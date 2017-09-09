@@ -22,15 +22,10 @@ void __internal::t_setUniform(const Shader & s, int & loc_io, int & tex_io, cons
 
 void __internal::t_setUniform(const Shader & s, int & loc_io, int & tex_io, const DirectionalLight & val)
 {
-	__internal::t_setUniform(s, loc_io, tex_io, val.getProj());	//0
-	__internal::t_setUniform(s, loc_io, tex_io, val.getView());	//1
-	__internal::t_setUniform(s, loc_io, tex_io, val.color);		//2
-	__internal::t_setUniform(s, loc_io, tex_io, val.intensity);	//3
-}
-
-void __internal::t_setUniform(const Shader & s, int & loc_io, int & tex_io, const CubeTexture & val)
-{
-	// todo
+	t_setUniform(s, loc_io, tex_io, val.getProj());	//0
+	t_setUniform(s, loc_io, tex_io, val.getView());	//1
+	t_setUniform(s, loc_io, tex_io, val.color);		//2
+	t_setUniform(s, loc_io, tex_io, val.intensity);	//3
 }
 
 SimplePresetScene::SimplePresetScene()

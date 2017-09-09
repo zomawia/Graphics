@@ -1,9 +1,12 @@
 #version 450
 
-in vec3 textureDir; // direction vector representing a 3D texture coordinate
-uniform samplerCube cubemap; // cubemap texture sampler
+out vec4 FragColor;
+
+in vec3 TexCoords;
+
+layout(location = 3) uniform samplerCube cubemap;
 
 void main()
 {             
-    FragColor = texture(cubemap, textureDir);
+    FragColor = texture(cubemap, TexCoords);
 }  

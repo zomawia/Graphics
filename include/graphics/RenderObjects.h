@@ -43,7 +43,6 @@ struct CubeFramebuffer {
 	CubeTexture targets[8];
 };
 
-
 Texture makeTexture(unsigned w, unsigned h, unsigned c, 
 	const void *pixels, bool isFloat = false);
 void freeTexture(Texture &t);
@@ -53,7 +52,7 @@ Framebuffer makeFramebuffer(unsigned w, unsigned h, unsigned c,
 void FreeFramebuffer(Framebuffer &fb);
 
 CubeTexture makeCubeMap(unsigned w, unsigned h, unsigned c,
-	const void *pixels, bool isFloat = false);
+	const void **pixels, bool isFloat = false);
 
 CubeFramebuffer makeCubeFramebuffer(unsigned w, unsigned h, unsigned c,
 	bool hasDepth, unsigned nTargets, unsigned nFloatTargets);

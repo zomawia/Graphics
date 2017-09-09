@@ -115,6 +115,7 @@
     <None Include="cube.frag" />
     <None Include="cube.vert" />
     <None Include="cubemap.frag" />
+    <None Include="cubemap.vert" />
     <None Include="direct.frag" />
     <None Include="direct.vert" />
     <None Include="gpass.frag" />

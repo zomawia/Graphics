@@ -2,7 +2,7 @@
 #include <fstream>
 #include <iostream>
 #include <random>
-
+#include "glinc.h"
 #include "glm\ext.hpp"
 
 #include "graphics\Load.h"
@@ -126,10 +126,14 @@ CubeTexture loadCubeMap(const char * path_Xpos, const char * path_Xneg, const ch
 {
 	CubeTexture retval = { 0 };
 
-	int w, h, c;
-	unsigned char **pixels = new unsigned char*[6];
+	//unsigned int textureID;
+	//glGenTextures(1, &textureID);
+	//glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
 
-	stbi_set_flip_vertically_on_load(true);
+	int w, h, c;
+	const void **pixels = new const void *;
+
+	//stbi_set_flip_vertically_on_load(false);
 
 	pixels[0] = stbi_load(path_Xpos, &w, &h, &c, STBI_default);
 	pixels[1] = stbi_load(path_Xneg, &w, &h, &c, STBI_default);
@@ -137,20 +141,13 @@ CubeTexture loadCubeMap(const char * path_Xpos, const char * path_Xneg, const ch
 	pixels[2] = stbi_load(path_Ypos, &w, &h, &c, STBI_default);
 	pixels[3] = stbi_load(path_Yneg, &w, &h, &c, STBI_default);
 
-	pixels[4] = stbi_load(path_Zpos, &w, &h, &c, STBI_default);
+	pixels[4] = stbi_load(path_Zpos, &w, &h, &c, STBI_default);	
 	pixels[5] = stbi_load(path_Zneg, &w, &h, &c, STBI_default);
 
 	retval = makeCubeMap(w, h, c, pixels);
-	stbi_image_free(pixels);
+	//stbi_image_free(pixels);
 
-	return retval;
-}
-
-CubeTexture loadCubeMap(std::vector<std::string> faces)
-{
-	CubeTexture retval = { 0 };
-
-	//todo
+	//delete *pixels;
 
 	return retval;
 }

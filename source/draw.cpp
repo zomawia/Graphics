@@ -34,8 +34,8 @@ void s0_draw(const Framebuffer & f, const Shader & s, const Geometry & g)
 	// We provide how polygons will be formed and how many.
 
 
-	glDrawElements(GL_TRIANGLE_FAN, g.size, GL_UNSIGNED_INT, 0);
-	//glDrawElements(GL_TRIANGLES, g.size, GL_UNSIGNED_INT, 0);
+	//glDrawElements(GL_TRIANGLE_FAN, g.size, GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, g.size, GL_UNSIGNED_INT, 0);
 }
 
 void clearFramebuffer(const Framebuffer & fb, bool color, bool depth)
@@ -88,6 +88,12 @@ namespace __internal
 	void t_setUniform(const Shader &s, int &loc_io, int &tex_io, const Texture &val) {
 		glActiveTexture(GL_TEXTURE0 + tex_io);
 		glBindTexture(GL_TEXTURE_2D, val.handle);
+		glProgramUniform1i(s.handle, loc_io++, tex_io++);
+	}
+	void t_setUniform(const Shader & s, int & loc_io, int & tex_io, const CubeTexture & val)
+	{
+		glActiveTexture(GL_TEXTURE0 + tex_io);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, val.handle);
 		glProgramUniform1i(s.handle, loc_io++, tex_io++);
 	}
 

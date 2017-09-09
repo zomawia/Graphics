@@ -250,7 +250,7 @@ void FreeFramebuffer(Framebuffer & fb)
 	fb = { 0,0,0,0 };
 }
 
-CubeTexture makeCubeMap(unsigned w, unsigned h, unsigned c, const void * pixels, bool isFloat)
+CubeTexture makeCubeMap(unsigned w, unsigned h, unsigned c, const void ** pixels, bool isFloat)
 {
 	CubeTexture retval = { 0 };
 
@@ -268,12 +268,24 @@ CubeTexture makeCubeMap(unsigned w, unsigned h, unsigned c, const void * pixels,
 	glGenTextures(1, &retval.handle);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, retval.handle);
 
-	// Assign texture to each side of cube	
-	for (int i = 0; i < 6; ++i)
-	{
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, ((isFloat || c == 0) ? i : f), 
-			w, h, 0, f,	(isFloat ? GL_FLOAT : GL_UNSIGNED_BYTE), pixels);
-	}
+	// Assign texture to each side of cube		
+	//Right, Left
+	glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, ((isFloat || c == 0) ? i : f),
+		w, h, 0, f, (isFloat ? GL_FLOAT : GL_UNSIGNED_BYTE), pixels[0]);	
+	glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, ((isFloat || c == 0) ? i : f),
+		w, h, 0, f, (isFloat ? GL_FLOAT : GL_UNSIGNED_BYTE), pixels[1]);
+	
+	//Top, Bottom
+	glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0, ((isFloat || c == 0) ? i : f),
+		w, h, 0, f, (isFloat ? GL_FLOAT : GL_UNSIGNED_BYTE), pixels[2]);
+	glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, ((isFloat || c == 0) ? i : f),
+		w, h, 0, f, (isFloat ? GL_FLOAT : GL_UNSIGNED_BYTE), pixels[3]);
+	
+	//Front, Back
+	glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 0, ((isFloat || c == 0) ? i : f),
+		w, h, 0, f, (isFloat ? GL_FLOAT : GL_UNSIGNED_BYTE), pixels[4]);
+	glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, ((isFloat || c == 0) ? i : f),
+		w, h, 0, f, (isFloat ? GL_FLOAT : GL_UNSIGNED_BYTE), pixels[5]);
 
 	// Specify wrapping and filtering methods
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -281,6 +293,9 @@ CubeTexture makeCubeMap(unsigned w, unsigned h, unsigned c, const void * pixels,
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+	//Clear
+	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 
 	return retval;
 }
