@@ -45,23 +45,30 @@ void main()
 		
 		"../../resources/textures/sincity_rt.tga",
 		"../../resources/textures/sincity_lf.tga"
-	);
-
-		
+	);		
 
 	Shader cubeShader = loadShader(
 		"../../resources/shaders/cubemap.vert", 
 		"../../resources/shaders/cubemap.frag");
 
+	Shader reflectShader = loadShader(
+		"../../resources/shaders/reflectSky.vert",
+		"../../resources/shaders/reflectSky.frag");
+
+	Shader refractShader = loadShader(
+		"../../resources/shaders/refractSky.vert",
+		"../../resources/shaders/refractSky.frag");
+	
+	// Reflection test
+	Geometry ss = loadGeometry("../../resources/models/soulspear.obj");
+	glm::mat4 ss_model;
 	//////////////////////////
 	// Camera Data
 	Camera cam;
-	cam.view =
-	
-		glm::lookAt(
-		glm::vec3(1, 1, 1),
-		glm::vec3(0, 1, 0),
-		glm::vec3(0, 1, 0));
+	//cam.view = glm::lookAt(
+	//	glm::vec3(1, 1, 0),		// eye
+	//	glm::vec3(0, 1, 0),		// center
+	//	glm::vec3(0, 1, 0));	// up
 	cam.proj = glm::perspective(45.f, 1280.f / 720.f, 1.f, 100.f);
 
 	//////////////////////////
@@ -80,13 +87,21 @@ void main()
 		float time = context.getTime();
 		int loc = 0, slot = 0;
 
-		model = glm::rotate(time/60, glm::vec3(0,1,0)) * glm::scale(glm::vec3(10, 10, 10));
+		model = glm::scale(glm::vec3(10, 10, 10));
+		//model = glm::rotate(time/20, glm::vec3(0,1,0)) * glm::scale(glm::vec3(10, 10, 10));
+		ss_model = glm::translate(glm::vec3(0, -2, -4)) * glm::rotate(time / 5, glm::vec3(0, 1, 0));
 
 		setFlags(RenderFlag::DEPTH);
 		clearFramebuffer(screen);
+		
+		loc = 0, slot = 0;
+		setUniforms(refractShader, loc, slot, cam, ss_model, cubeMap);
+		s0_draw(screen, refractShader, ss);
 
-		setUniforms(cubeShader, loc, slot, cam, model, cityMap);
+		loc = 0, slot = 0;
+		setUniforms(cubeShader, loc, slot, cam, model, cubeMap);
 		s0_draw(screen, cubeShader, cubeGeo);
+
 	}
 
 

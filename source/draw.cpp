@@ -13,7 +13,7 @@ void setFlags(int flags)
 	if (flags &RenderFlag::ADDITIVE) {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_ONE, GL_ONE);
-	}
+	}	
 
 	else glDisable(GL_BLEND);
 }

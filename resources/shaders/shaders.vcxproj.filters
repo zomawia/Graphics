@@ -53,5 +53,9 @@
     <None Include="lpassD.vert" />
     <None Include="cubemap.frag" />
     <None Include="cubemap.vert" />
+    <None Include="reflectSky.vert" />
+    <None Include="reflectSky.frag" />
+    <None Include="refractSky.vert" />
+    <None Include="refractSky.frag" />
   </ItemGroup>
 </Project>
