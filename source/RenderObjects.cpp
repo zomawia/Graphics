@@ -174,6 +174,25 @@ void freeShader(Shader &s)
 	s = { 0 };
 }
 
+ParticleBuffer makeParticleBuffer(const ParticleBuffer * parts, size_t psize)
+{
+	ParticleBuffer retval = { 0 };
+
+	// Create VBO for input on even-numbered frames and output on odd-numbered frames
+	glGenBuffers(1, &retval.handle[0]);
+	glBindBuffer(GL_ARRAY_BUFFER, retval.vbo[0]);
+	glBufferData(GL_ARRAY_BUFFER, psize, parts, GL_STREAM_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	// Create VBO for output on even-numbered frames and input on odd-numbered frames
+	glGenBuffers(1, &retval.handle[1]);
+	glBindBuffer(GL_ARRAY_BUFFER, retval.vbo[1]);
+	glBufferData(GL_ARRAY_BUFFER, psize, 0, GL_STREAM_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	return retval;
+}
+
 Texture makeTexture(unsigned w, unsigned h, unsigned c, const void * pixels, bool isFloat)
 {
 	Texture retval = { 0 };

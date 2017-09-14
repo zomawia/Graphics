@@ -6,9 +6,10 @@
 //	Planned library extensions
 //	1. Cube-mapping support
 //		- skyboxes
-//		- reflections
+//		- reflection shader
+//		- refraction shader
 //	2. Transform feedback
-//
+//		- particle system
 ///////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////
 
@@ -95,8 +96,8 @@ void main()
 		clearFramebuffer(screen);
 		
 		loc = 0, slot = 0;
-		setUniforms(refractShader, loc, slot, cam, ss_model, cubeMap);
-		s0_draw(screen, refractShader, ss);
+		setUniforms(reflectShader, loc, slot, cam, ss_model, cubeMap);
+		s0_draw(screen, reflectShader, ss);
 
 		loc = 0, slot = 0;
 		setUniforms(cubeShader, loc, slot, cam, model, cubeMap);
