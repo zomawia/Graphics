@@ -1,6 +1,8 @@
 #include "graphics\RenderObjects.h"
+#include "graphics\GameObjects.h"
 #include "graphics\draw.h"
 #include "glinc.h"
+#include <utility>
 
 void setFlags(int flags)
 {
@@ -32,10 +34,37 @@ void s0_draw(const Framebuffer & f, const Shader & s, const Geometry & g)
 
 	// Drawing is performed using the index buffer. 
 	// We provide how polygons will be formed and how many.
-
-
-	//glDrawElements(GL_TRIANGLE_FAN, g.size, GL_UNSIGNED_INT, 0);
 	glDrawElements(GL_TRIANGLES, g.size, GL_UNSIGNED_INT, 0);
+}
+
+void tf0_update(const Shader & s, const ParticleBuffer & pb, int active)
+{	
+	glBindBuffer(GL_ARRAY_BUFFER, pb.handle[active]);
+	glUseProgram(s.handle);	
+	glEnableVertexAttribArray(pb.vbo[active]);
+	//glGenVertexArrays();
+	glBindVertexArray(pb.vbo[active]);	
+}
+
+void tf0_draw(const Framebuffer & f, const Shader & s, const ParticleBuffer & pb)
+{
+	//glEnable(GL_RASTERIZER_DISCARD);
+	
+	glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, pb.vbo[1]);
+
+	glBeginTransformFeedback(GL_POINTS);
+	glBindTexture(GL_TEXTURE_3D, pb.handle[0]);
+	glDrawArrays(GL_POINTS, 0, pb.size);
+
+	//glEndTransformFeedback();
+
+	//std::swap(pb.vbo[0], pb.vbo[1]);
+
+	//glViewport(0, 0, f.size, f.size);
+	//glDrawElements(GL_TRIANGLES, f.size, GL_UNSIGNED_INT, 0);
+
+	//glDisable(GL_RASTERIZER_DISCARD);
+
 }
 
 void clearFramebuffer(const Framebuffer & fb, bool color, bool depth)
@@ -62,12 +91,6 @@ void setUniform(const Shader & s, int location, int value)
 		glDisable(GL_BLEND);
 	}
 }
-
-//void setUniform(const Shader & s, int location, float x, float y)
-//{
-//	glProgramUniform1f(s.handle, location, x);
-//	glProgramUniform1f(s.handle, location+1, y);
-//}
 
 void setUniform(const Shader & s, int location, const Texture & value, unsigned slot)
 {

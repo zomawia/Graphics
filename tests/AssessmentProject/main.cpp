@@ -1,8 +1,5 @@
 ///////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////
-//	Zomawia Sailo//		
 //		Graphics Library Assessment Project
-//
 //	Planned library extensions
 //	1. Cube-mapping support
 //		- skyboxes
@@ -10,7 +7,6 @@
 //		- refraction shader
 //	2. Transform feedback
 //		- particle system
-///////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////
 
 #include "graphics\GameObjects.h"
@@ -27,6 +23,8 @@ void main()
 	
 	Geometry cubeGeo = loadGeometry("../../resources/models/cube.obj");
 	glm::mat4 model;
+
+	Texture coolcat = loadTexture("../../resources/textures/coolcat.jpg");
 
 	CubeTexture cubeMap = loadCubeMap(				
 		"../../resources/textures/stormydays_ft.tga",
@@ -59,6 +57,8 @@ void main()
 	Shader refractShader = loadShader(
 		"../../resources/shaders/refractSky.vert",
 		"../../resources/shaders/refractSky.frag");
+
+	Shader testShader = loadUpdateShader("../../resources/shaders/advection.vert");
 	
 	// Reflection test
 	Geometry ss = loadGeometry("../../resources/models/soulspear.obj");
@@ -83,9 +83,11 @@ void main()
 
 	Framebuffer screen = { 0, 1280, 720 };	
 
+	ParticleBuffer pb = makeParticleBuffer(&pb, 2);
+
 	while (context.step())
 	{
-		float time = context.getTime();
+		float time = (float)context.getTime();
 		int loc = 0, slot = 0;
 
 		model = glm::scale(glm::vec3(10, 10, 10));
@@ -95,14 +97,18 @@ void main()
 		setFlags(RenderFlag::DEPTH);
 		clearFramebuffer(screen);
 		
-		loc = 0, slot = 0;
-		setUniforms(reflectShader, loc, slot, cam, ss_model, cubeMap);
-		s0_draw(screen, reflectShader, ss);
+		//loc = 0, slot = 0;
+		//setUniforms(reflectShader, loc, slot, cam, ss_model, cubeMap);
+		//s0_draw(screen, reflectShader, ss);
 
 		loc = 0, slot = 0;
 		setUniforms(cubeShader, loc, slot, cam, model, cubeMap);
-		s0_draw(screen, cubeShader, cubeGeo);
-
+		s0_draw(screen, cubeShader, cubeGeo);		
+		
+		loc = 0, slot = 0;
+		//setUniforms(testShader, loc, slot, time, coolcat);
+		tf0_update(testShader, pb, 0);
+		//tf0_draw(screen, testShader, pb);
 	}
 
 

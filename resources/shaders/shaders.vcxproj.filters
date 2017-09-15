@@ -57,5 +57,6 @@
     <None Include="reflectSky.frag" />
     <None Include="refractSky.vert" />
     <None Include="refractSky.frag" />
+    <None Include="advection.vert" />
   </ItemGroup>
 </Project>

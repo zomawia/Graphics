@@ -168,6 +168,41 @@ Shader makeShader(const char * vsource, const char * fsource)
 	return retval;
 }
 
+Shader makeUpdateShader(const char * vert_src)
+{
+	Shader retval = { 0 };
+
+	// use local variables to track the handles when we create them
+	retval.handle = glCreateProgram();
+	unsigned vs = glCreateShader(GL_VERTEX_SHADER);
+
+	glShaderSource(vs, 1, &vert_src, 0);	
+
+	glCompileShader(vs);
+	#ifdef _DEBUG
+		GLint successVS = GL_FALSE;
+		glGetShaderiv(vs, GL_COMPILE_STATUS, &successVS);
+		if (successVS == GL_FALSE)
+		{
+			int length = 0;
+			glGetShaderiv(vs, GL_INFO_LOG_LENGTH, &length);
+			char *log = new char[length];
+			glGetShaderInfoLog(vs, length, 0, log);
+			std::cerr << log << std::endl;
+			delete[] log;
+		}
+	#endif _DEBUG
+
+	glAttachShader(retval.handle, vs);
+	glLinkProgram(retval.handle);
+
+	// Before we finish we can now delete the individual shaders
+	glDeleteShader(vs);
+
+	return retval;
+}
+
+
 void freeShader(Shader &s)
 {
 	glDeleteProgram(s.handle);
@@ -178,16 +213,16 @@ ParticleBuffer makeParticleBuffer(const ParticleBuffer * parts, size_t psize)
 {
 	ParticleBuffer retval = { 0 };
 
-	// Create VBO for input on even-numbered frames and output on odd-numbered frames
-	glGenBuffers(1, &retval.handle[0]);
+	glGenBuffers(1, &retval.vbo[0]);
+	glGenTransformFeedbacks(1, &retval.handle[0]);
 	glBindBuffer(GL_ARRAY_BUFFER, retval.vbo[0]);
-	glBufferData(GL_ARRAY_BUFFER, psize, parts, GL_STREAM_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(parts) * psize, parts, GL_STREAM_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	// Create VBO for output on even-numbered frames and input on odd-numbered frames
-	glGenBuffers(1, &retval.handle[1]);
+	glGenBuffers(1, &retval.vbo[1]);
+	glGenTransformFeedbacks(1, &retval.handle[1]);
 	glBindBuffer(GL_ARRAY_BUFFER, retval.vbo[1]);
-	glBufferData(GL_ARRAY_BUFFER, psize, 0, GL_STREAM_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(parts) * psize, 0, GL_STREAM_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	return retval;
@@ -287,8 +322,9 @@ CubeTexture makeCubeMap(unsigned w, unsigned h, unsigned c, const void ** pixels
 	glGenTextures(1, &retval.handle);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, retval.handle);
 
-	// Assign texture to each side of cube		
-	//Right, Left
+	// Assign texture to each side of cube
+
+	//Front, Back	
 	glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, ((isFloat || c == 0) ? i : f),
 		w, h, 0, f, (isFloat ? GL_FLOAT : GL_UNSIGNED_BYTE), pixels[0]);	
 	glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, ((isFloat || c == 0) ? i : f),
@@ -300,7 +336,7 @@ CubeTexture makeCubeMap(unsigned w, unsigned h, unsigned c, const void ** pixels
 	glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, ((isFloat || c == 0) ? i : f),
 		w, h, 0, f, (isFloat ? GL_FLOAT : GL_UNSIGNED_BYTE), pixels[3]);
 	
-	//Front, Back
+	//Right, Left
 	glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 0, ((isFloat || c == 0) ? i : f),
 		w, h, 0, f, (isFloat ? GL_FLOAT : GL_UNSIGNED_BYTE), pixels[4]);
 	glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, ((isFloat || c == 0) ? i : f),
@@ -318,4 +354,8 @@ CubeTexture makeCubeMap(unsigned w, unsigned h, unsigned c, const void ** pixels
 
 	return retval;
 }
+
+
+
+
 

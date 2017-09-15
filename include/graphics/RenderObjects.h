@@ -62,3 +62,5 @@ CubeTexture makeCubeMap(unsigned w, unsigned h, unsigned c,
 
 CubeFramebuffer makeCubeFramebuffer(unsigned w, unsigned h, unsigned c,
 	bool hasDepth, unsigned nTargets, unsigned nFloatTargets);
+
+Shader makeUpdateShader(const char *vert_src);

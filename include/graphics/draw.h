@@ -13,17 +13,18 @@ struct Geometry;
 struct Shader;
 struct Framebuffer;
 struct Texture;
+struct ParticleBuffer;
 
 void setFlags(int flags);
 
 void s0_draw(const Framebuffer &f, const Shader &s, const Geometry&g);
+void tf0_update(const Shader &s, const ParticleBuffer &pb, int active);
+void tf0_draw(const Framebuffer &f, const Shader &s, const ParticleBuffer &pb);
 
 void clearFramebuffer(const Framebuffer &fb, bool color = true, bool depth = true);
 
 void setUniform(const Shader &s, int location, float value);
-
 void setUniform(const Shader &s, int location, int value);
-
 void setUniform(const Shader &s, int location, const Texture &value, unsigned slot);
 
 // Called each time the bariadic unpacking recursion takes place
