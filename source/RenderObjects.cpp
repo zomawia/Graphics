@@ -193,15 +193,16 @@ Shader makeUpdateShader(const char * vert_src)
 		}
 	#endif _DEBUG
 
-	glAttachShader(retval.handle, vs);
+	glAttachShader(retval.handle, vs);	
 	glLinkProgram(retval.handle);
 
 	// Before we finish we can now delete the individual shaders
 	glDeleteShader(vs);
+	
+	
 
 	return retval;
 }
-
 
 void freeShader(Shader &s)
 {
@@ -213,17 +214,27 @@ ParticleBuffer makeParticleBuffer(const ParticleBuffer * parts, size_t psize)
 {
 	ParticleBuffer retval = { 0 };
 
-	glGenBuffers(1, &retval.vbo[0]);
-	glGenTransformFeedbacks(1, &retval.handle[0]);
-	glBindBuffer(GL_ARRAY_BUFFER, retval.vbo[0]);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(parts) * psize, parts, GL_STREAM_DRAW);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glGenVertexArrays(1, &retval.handle[0]);
+	glBindVertexArray(retval.handle[0]);
 
+	GLfloat data[] = { 1, 2, 3, 4, 5 };
+
+	glGenBuffers(1, &retval.vbo[0]);	
+	glBindBuffer(GL_ARRAY_BUFFER, retval.vbo[0]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(data), data, GL_STATIC_DRAW);
+	
 	glGenBuffers(1, &retval.vbo[1]);
-	glGenTransformFeedbacks(1, &retval.handle[1]);
 	glBindBuffer(GL_ARRAY_BUFFER, retval.vbo[1]);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(parts) * psize, 0, GL_STREAM_DRAW);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(data), nullptr, GL_STREAM_DRAW);
+
+	/////////////////////////////////////////////////////////////////////////
+	//glBindBuffer(GL_ARRAY_BUFFER, 0);	
+
+	//glGenBuffers(1, &retval.vbo[1]);
+	//glGenTransformFeedbacks(1, &retval.handle[1]);
+	//glBindBuffer(GL_ARRAY_BUFFER, retval.vbo[1]);
+	//glBufferData(GL_ARRAY_BUFFER, sizeof(parts) * psize, 0, GL_STREAM_DRAW);
+	//glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	return retval;
 }

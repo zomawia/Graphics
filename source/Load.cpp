@@ -22,8 +22,6 @@ glm::vec4 randColor()
 	return {rand() / (float)RAND_MAX, rand() / (float)RAND_MAX, rand() / (float)RAND_MAX, 1};
 }
 
-
-
 std::string readFile(const char *filePath) {
 	//http://www.nexcius.net/2012/11/20/how-to-load-a-glsl-shader-in-opengl-using-c/
 
@@ -155,9 +153,12 @@ CubeTexture loadCubeMap(const char * path_Xpos, const char * path_Xneg, const ch
 Shader loadUpdateShader(const char * vert_path)
 {
 	Shader retval = { 0 };
+
 	std::string vertSTR = readFile(vert_path);
 	const char* vertSRC = vertSTR.c_str();
+
 	retval = makeUpdateShader(vertSRC);
+
 	return retval;
 }
 

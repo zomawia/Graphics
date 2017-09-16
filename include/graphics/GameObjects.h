@@ -41,9 +41,6 @@ struct ParticleVertex
 	glm::vec4 position;
 	glm::vec3 velocity;
 	glm::vec4 color;
-	float life;
-
-	ParticleVertex() : position(0.0f), velocity(0.0f), color(1.0f), life(0.0f) {}
 };
 
 // 0: proj, 1: view, 2: color, 3: intensity

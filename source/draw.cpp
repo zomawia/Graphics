@@ -39,31 +39,56 @@ void s0_draw(const Framebuffer & f, const Shader & s, const Geometry & g)
 
 void tf0_update(const Shader & s, const ParticleBuffer & pb, int active)
 {	
-	glBindBuffer(GL_ARRAY_BUFFER, pb.handle[active]);
-	glUseProgram(s.handle);	
-	glEnableVertexAttribArray(pb.vbo[active]);
-	//glGenVertexArrays();
-	glBindVertexArray(pb.vbo[active]);	
+	//glBindBuffer(GL_ARRAY_BUFFER, pb.vbo[active]);
+	//glUseProgram(s.handle);	
+	//glEnableVertexAttribArray(pb.vbo[active]);
+	////glGenVertexArrays();
+	//glBindVertexArray(pb.handle[active]);	
+
+	const GLchar *feedbackVaryings[] = { "outValue" };
+	glTransformFeedbackVaryings(s.handle, 1, feedbackVaryings, GL_INTERLEAVED_ATTRIBS);
+
+	GLint inputAttrib = glGetAttribLocation(s.handle, "inValue");
+	glEnableVertexAttribArray(inputAttrib);
+	glVertexAttribPointer(inputAttrib, 1, GL_FLOAT, GL_FALSE, 0, 0);
 }
 
 void tf0_draw(const Framebuffer & f, const Shader & s, const ParticleBuffer & pb)
 {
-	//glEnable(GL_RASTERIZER_DISCARD);
+	glEnable(GL_RASTERIZER_DISCARD);
 	
-	glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, pb.vbo[1]);
+	glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, pb.vbo[0]);
 
 	glBeginTransformFeedback(GL_POINTS);
-	glBindTexture(GL_TEXTURE_3D, pb.handle[0]);
-	glDrawArrays(GL_POINTS, 0, pb.size);
+	glDrawArrays(GL_POINTS, 0, 5);
+	glEndTransformFeedback();
 
-	//glEndTransformFeedback();
+	glFlush();
 
-	//std::swap(pb.vbo[0], pb.vbo[1]);
+	GLfloat feedback[5];
+	glGetBufferSubData(GL_TRANSFORM_FEEDBACK_BUFFER, 0, sizeof(feedback), feedback);
 
-	//glViewport(0, 0, f.size, f.size);
-	//glDrawElements(GL_TRIANGLES, f.size, GL_UNSIGNED_INT, 0);
+	printf("%f %f %f %f %f n", feedback[0], feedback[1], feedback[2], feedback[3], feedback[4]);
+
+	////////////////////////////////////////////////////////////////
+
+	//glBindTexture(GL_TEXTURE_2D, pb.handle[0]);	
+
+	////std::swap(pb.vbo[0], pb.vbo[1]);
+	////std::swap(pb.handle[0], pb.handle[1]);
+
+	////glViewport(0, 0, f.size, f.size);
+	////glDrawElements(GL_TRIANGLES, f.size, GL_UNSIGNED_INT, 0);
 
 	//glDisable(GL_RASTERIZER_DISCARD);
+
+	//glUseProgram(s.handle);
+	//glBindBuffer(GL_ARRAY_BUFFER, pb.vbo[0]);
+	//glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 16, 0);
+	//glVertexAttribPointer(1, 1, GL_FLOAT, GL_FALSE, 16, 0);
+
+	//glDrawArrays(GL_POINTS, 0, pb.size);
+
 
 }
 
@@ -131,5 +156,3 @@ namespace __internal
 		
 	}
 }
-
-

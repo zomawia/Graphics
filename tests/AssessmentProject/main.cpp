@@ -21,6 +21,8 @@ void main()
 	Context context;
 	context.init(1280, 720);
 	
+	ParticleVertex pVerts = ParticleVertex();	
+
 	Geometry cubeGeo = loadGeometry("../../resources/models/cube.obj");
 	glm::mat4 model;
 
@@ -84,7 +86,7 @@ void main()
 	Framebuffer screen = { 0, 1280, 720 };	
 
 	ParticleBuffer pb = makeParticleBuffer(&pb, 2);
-
+	tf0_update(testShader, pb, 0);
 	while (context.step())
 	{
 		float time = (float)context.getTime();
@@ -101,14 +103,14 @@ void main()
 		//setUniforms(reflectShader, loc, slot, cam, ss_model, cubeMap);
 		//s0_draw(screen, reflectShader, ss);
 
-		loc = 0, slot = 0;
-		setUniforms(cubeShader, loc, slot, cam, model, cubeMap);
-		s0_draw(screen, cubeShader, cubeGeo);		
+		//loc = 0, slot = 0;
+		//setUniforms(cubeShader, loc, slot, cam, model, cubeMap);
+		//s0_draw(screen, cubeShader, cubeGeo);		
 		
-		loc = 0, slot = 0;
-		//setUniforms(testShader, loc, slot, time, coolcat);
-		tf0_update(testShader, pb, 0);
-		//tf0_draw(screen, testShader, pb);
+		//loc = 0, slot = 0;
+		//setUniforms(testShader, loc, slot, time);
+		
+		tf0_draw(screen, testShader, pb);
 	}
 
 
