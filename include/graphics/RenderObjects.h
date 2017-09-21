@@ -43,11 +43,18 @@ struct CubeFramebuffer {
 	CubeTexture targets[8];
 };
 
+struct ParticleVertex
+{
+	glm::vec4 position;
+	glm::vec3 velocity;
+	glm::vec4 color;
+};
+
 struct ParticleBuffer { 
 	unsigned handle[2], vbo[2], size; 
 };
 
-ParticleBuffer makeParticleBuffer(const ParticleBuffer *parts, size_t psize);
+ParticleBuffer makeParticleBuffer(const ParticleVertex *parts, size_t psize);
 
 Texture makeTexture(unsigned w, unsigned h, unsigned c, 
 	const void *pixels, bool isFloat = false);

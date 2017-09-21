@@ -1,9 +1,10 @@
 #version 450
 
-in float inValue;
-out float outValue;
+out vec3 outVel;
+out vec4 outCol;
+out vec4 outPos;
 
 void main()
 {
-    outValue = sqrt(inValue);
+    //outValue = sqrt(inValue);
 }

@@ -21,7 +21,10 @@ void main()
 	Context context;
 	context.init(1280, 720);
 	
-	ParticleVertex pVerts = ParticleVertex();	
+	ParticleVertex pVerts = 
+	{
+		{ -.5f,-.5f, 0, 1 },{ 0,0,0},{1,0,0,1}
+	};
 
 	Geometry cubeGeo = loadGeometry("../../resources/models/cube.obj");
 	glm::mat4 model;
@@ -85,15 +88,15 @@ void main()
 
 	Framebuffer screen = { 0, 1280, 720 };	
 
-	ParticleBuffer pb = makeParticleBuffer(&pb, 2);
-	tf0_update(testShader, pb, 0);
+	ParticleBuffer pb = makeParticleBuffer(&pVerts, 3);
+	
 	while (context.step())
 	{
 		float time = (float)context.getTime();
 		int loc = 0, slot = 0;
 
 		model = glm::scale(glm::vec3(10, 10, 10));
-		//model = glm::rotate(time/20, glm::vec3(0,1,0)) * glm::scale(glm::vec3(10, 10, 10));
+		model = glm::rotate(time/20, glm::vec3(0,1,0)) * glm::scale(glm::vec3(10, 10, 10));
 		ss_model = glm::translate(glm::vec3(0, -2, -4)) * glm::rotate(time / 5, glm::vec3(0, 1, 0));
 
 		setFlags(RenderFlag::DEPTH);
@@ -104,12 +107,12 @@ void main()
 		//s0_draw(screen, reflectShader, ss);
 
 		//loc = 0, slot = 0;
-		//setUniforms(cubeShader, loc, slot, cam, model, cubeMap);
+		//setUniforms(cubeShader, loc, slot, cam, model, cityMap);
 		//s0_draw(screen, cubeShader, cubeGeo);		
 		
 		//loc = 0, slot = 0;
 		//setUniforms(testShader, loc, slot, time);
-		
+		tf0_update(testShader, pb, 0);
 		tf0_draw(screen, testShader, pb);
 	}
 

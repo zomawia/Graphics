@@ -36,12 +36,7 @@ struct CubeMap
 	CubeTexture right, left, top, bottom, back, front;
 };
 
-struct ParticleVertex
-{
-	glm::vec4 position;
-	glm::vec3 velocity;
-	glm::vec4 color;
-};
+
 
 // 0: proj, 1: view, 2: color, 3: intensity
 struct DirectionalLight
