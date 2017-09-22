@@ -39,37 +39,62 @@ void s0_draw(const Framebuffer & f, const Shader & s, const Geometry & g)
 
 // Transfer data from vertex shader to particle buffer
 void tf0_update(const Shader & s, const ParticleBuffer & pb, int active)
-{	
-	static const char* varyings[] = { "outPos","outVel","outCol" };
+{		
+	glUseProgram(s.handle);
+	glBindVertexArray(pb.vao);
 
-	glTransformFeedbackVaryings(s.handle, 3, varyings, GL_INTERLEAVED_ATTRIBS);
-
-	//glLinkProgram(s.handle);
-
-	glBindBuffer(GL_TRANSFORM_FEEDBACK_BUFFER, pb.handle[active]);
-	glBufferData(GL_TRANSFORM_FEEDBACK_BUFFER, pb.size, NULL, GL_DYNAMIC_COPY);
-
-	glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, pb.vbo[active]);
+	glBindBuffer(GL_ARRAY_BUFFER, pb.vbo[0]);
 	
-	//Bind outputs from vertex shader
-	//glTransformFeedbackBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, s.handle, pb.handle[active]);
-	//glLinkProgram(s.handle);
+	//pos
+	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(ParticleVertex), (void*)0);
+	//vel
+	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(ParticleVertex), (void*)16);
+	//col
+	glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(ParticleVertex), (void*)28);
+
+	// Enable rasterizer discard, because compute shader won't raster data
+	glEnable(GL_RASTERIZER_DISCARD);
+
+	// Bind the transform feedback buffer using the second vertex buffer object.
+	// All transformed data will be stored to it.
+	glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, pb.vbo[1]);
+
+	// Draw Arrays using Transform Feedback
+	glBeginTransformFeedback(GL_POINTS);
+	glDrawArrays(GL_POINTS, 0, pb.size);
+	glEndTransformFeedback();
+
+	// Unbind the transform feedback for safety
+	glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, 0);
+
+	// Disable the rasterizer discard, because we need rasterization in drawing.
+	glDisable(GL_RASTERIZER_DISCARD_EXT);
+
+	// Unbind vertex array object and disable computing program
+	glBindVertexArray(0);
+	glUseProgram(0);
 }
 
 void tf0_draw(const Framebuffer & f, const Shader & s, const ParticleBuffer & pb)
 {
+	glUseProgram(s.handle);	
+	glBindVertexArray(pb.vao);
+	glBindFramebuffer(GL_FRAMEBUFFER, f.handle);	
 	
-	//glUseProgram(s.handle);
+	glBindBuffer(GL_ARRAY_BUFFER, pb.vbo[0]);
+	//pos
+	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(ParticleVertex), (void*)0);
+	//vel
+	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(ParticleVertex), (void*)16);
+	//col
+	glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(ParticleVertex), (void*)28);
 
-	glEnable(GL_RASTERIZER_DISCARD);
+	glViewport(0, 0, f.width, f.height);
 	
-	glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, pb.vbo[0]);
+	glDrawArrays(GL_POINTS, 0, pb.size);
 
-	glBeginTransformFeedback(GL_TRIANGLES);
-
-	glDrawElements(GL_TRIANGLES, pb.size, GL_UNSIGNED_INT, 0);
-
-	glEndTransformFeedback();
+	glBindVertexArray(0);
+	glUseProgram(0);
 }
 
 void clearFramebuffer(const Framebuffer & fb, bool color, bool depth)

@@ -51,7 +51,7 @@ struct ParticleVertex
 };
 
 struct ParticleBuffer { 
-	unsigned handle[2], vbo[2], size; 
+	unsigned vao, vbo[2], ubo, size; 
 };
 
 ParticleBuffer makeParticleBuffer(const ParticleVertex *parts, size_t psize);

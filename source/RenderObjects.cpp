@@ -200,14 +200,17 @@ Shader makeUpdateShader(const char * vert_src)
 
 	glAttachShader(retval.handle, vs);	
 	
-	// Link after we get the shader feedback
+	const char* sVaryings[3] =
+	{
+		"outPos","outVel","outCol"
+	};
+
+	// Program is informed about the outputs before linking
+	glTransformFeedbackVaryings(retval.handle, 3, sVaryings, GL_INTERLEAVED_ATTRIBS);	
 	glLinkProgram(retval.handle);
-	
 
 	// Before we finish we can now delete the individual shaders
-	glDeleteShader(vs);
-	
-	
+	glDeleteShader(vs);	
 
 	return retval;
 }
@@ -223,38 +226,37 @@ ParticleBuffer makeParticleBuffer(const ParticleVertex * parts, size_t psize)
 	ParticleBuffer retval = { 0 };
 	retval.size = psize;
 
-	// declare our OpenGL objects and acquire handles
-	glGenBuffers(1, &retval.vbo[0]);
-	glGenBuffers(1, &retval.vbo[1]);
-	
-	glGenVertexArrays(1, &retval.handle[0]); //stores information on how memory is laid out
-	glGenVertexArrays(1, &retval.handle[0]); //stores information on how memory is laid out	
+	//stores information on how memory is laid out
+	glGenVertexArrays(1, &retval.vao); 
+
+	// Generate all necessary buffors for data
+	glGenBuffers(2, retval.vbo);
+	glGenBuffers(1, &retval.ubo);
 
 	// scope our handles
 	// VAO must be bound first so that openGL will bind the VBO and IBO to it.
-	glBindVertexArray(retval.handle[0]);
-	glBindVertexArray(retval.handle[1]);
-	glBindBuffer(GL_ARRAY_BUFFER, retval.vbo[0]);
-	glBindBuffer(GL_ARRAY_BUFFER, retval.vbo[1]);	
+	glBindVertexArray(retval.vao);
 
-	// initialize the buffers with our own data.
-	glBufferData(GL_ARRAY_BUFFER, psize * sizeof(ParticleVertex), parts, GL_STATIC_DRAW);		
-	
-	// activate an attribute and then provide details about that attribute
-
+	// Activate an attribute and then provide details about that attribute
 	//pos
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(ParticleVertex), (void*)0);
+	//glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(ParticleVertex), (void*)0);
 	//vel
 	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(ParticleVertex), (void*)16);
+	//glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(ParticleVertex), (void*)16);
 	//col
 	glEnableVertexAttribArray(2);
-	glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(ParticleVertex), (void*)28);
+	//glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(ParticleVertex), (void*)28);
 
-	//unbind the VAO first, otherwise the VAO will dissociate from the VBO and IBO
-	glBindVertexArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	// initialize the buffers with our own data.
+	glBindBuffer(GL_ARRAY_BUFFER, retval.vbo[0]);
+	glBufferData(GL_ARRAY_BUFFER, psize * sizeof(ParticleVertex), parts, GL_STATIC_DRAW);		
+
+	glBindBuffer(GL_ARRAY_BUFFER, retval.vbo[1]);
+	glBufferData(GL_ARRAY_BUFFER, psize * sizeof(ParticleVertex), parts, GL_STATIC_DRAW);
+	
+	// Unbind the vertex array object for now, it won't be needed for a while
+	glBindVertexArray(0);	
 
 	return retval;
 }
