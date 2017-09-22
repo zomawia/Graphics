@@ -1,4 +1,5 @@
 ///////////////////////////////////////////////////////////////////////
+//		Zomawia Sailo
 //		Graphics Library Assessment Project
 //	Planned library extensions
 //	1. Cube-mapping support
@@ -70,7 +71,7 @@ void main()
 		"../../resources/shaders/refractSky.vert",
 		"../../resources/shaders/refractSky.frag");
 
-	Shader tfShader = loadUpdateShader("../../resources/shaders/advection.vert");	
+	Shader tfShader = loadUpdateShader("../../resources/shaders/update.vert");	
 	
 	// Reflection test
 	Geometry ss = loadGeometry("../../resources/models/soulspear.obj");
@@ -106,16 +107,24 @@ void main()
 
 	
 
-	const int MaxParticles = 10000;
+	const int MaxParticles = 1000000;
 	ParticleVertex *ParticlesContainer = new ParticleVertex[MaxParticles];
 	for (int i = 0; i < MaxParticles; ++i) 
 	{
 		double x = r2(-1.0f, 1.0f);
 		double y = r2(-1.0f, 1.0f);
 		double z = r2(-1.0f, 1.0f);
+
+		double vX = r2(-0.5f, 0.5f);
+		double vY = r2(-0.5f, 0.5f);
+		double vZ = r2(-0.5f, 0.5f);
 		ParticlesContainer[i] = {
-			{ x,y,z, 1 },{ x,y,z },{ x,y,z,1 }
+			{ x,y,z, 1 },{ x,y,z },{x,y,z,1 }
 		};
+
+		//ParticlesContainer[i] = {
+		//	{ 0,0,0,1 },{ 0,0,0 },{ x,y,z,1 }
+		//};
 	}
 
 	ParticleBuffer pb = makeParticleBuffer(ParticlesContainer, MaxParticles);
@@ -124,33 +133,40 @@ void main()
 		float time = (float)context.getTime();
 		int loc = 0, slot = 0;
 
-		cube_model = glm::scale(glm::vec3(2, 2, 2));
-		model = glm::scale(glm::vec3(10, 10, 10));
-		model = glm::rotate(time/20, glm::vec3(0,1,0)) * glm::scale(glm::vec3(10, 10, 10));
-		ss_model = glm::translate(glm::vec3(0, -2, -4)) * glm::rotate(time / 5, glm::vec3(0, 1, 0));
+		cube_model = glm::translate(glm::vec3(10, 1, 0)) * glm::scale(glm::vec3(2, 2, 2));
+		model = glm::scale(glm::vec3(20, 20, 20));
+		
+		ss_model = glm::translate(glm::vec3(0, -2, -4)) * glm::rotate(time * 5, glm::vec3(.7, 1, .3));
 
 		setFlags(RenderFlag::DEPTH);
 		clearFramebuffer(screen);
-		//
-		////object
-		loc = 0, slot = 0;
-		setUniforms(refractShader, loc, slot, cam, ss_model, cityMap);
-		s0_draw(screen, refractShader, cubeGeo);
 
-		//skybox
-		//loc = 0, slot = 0;
-		//setUniforms(cubeShader, loc, slot, cam, model, cityMap);
-		//s0_draw(screen, cubeShader, cubeGeo);	
+
+
+		// SKYBOX
+		if (context.getKey(' '))
+		{
+			model = glm::rotate(time / 20, glm::vec3(0, 1, 0)) * glm::scale(glm::vec3(10, 10, 10));
+
+			loc = 0, slot = 0;
+			setUniforms(cubeShader, loc, slot, cam, model, cityMap);
+			s0_draw(screen, cubeShader, cubeGeo);
+		}
 		
-		loc = 0, slot = 0;
+		// PARTICLES
+		loc = 0, slot = 0;	
 		setUniforms(tfShader, loc, slot, time);
 		tf0_update(tfShader, pb, 0);
 		std::swap(pb.vbo[0], pb.vbo[1]);
 
 		loc = 0, slot = 0;
-		setUniforms(pointShader, loc, slot, cam, model, 1.0f);
+		setUniforms(pointShader, loc, slot, cam, model, coolcat, time);
 		tf0_draw(screen, pointShader, pb);
 
+		// SPINNING REFRACTING CUBE
+		loc = 0, slot = 0;
+		setUniforms(refractShader, loc, slot, cam, ss_model, cityMap, time);
+		s0_draw(screen, refractShader, cubeGeo);
 		
 	}
 

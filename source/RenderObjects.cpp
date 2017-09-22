@@ -250,13 +250,15 @@ ParticleBuffer makeParticleBuffer(const ParticleVertex * parts, size_t psize)
 
 	// initialize the buffers with our own data.
 	glBindBuffer(GL_ARRAY_BUFFER, retval.vbo[0]);
-	glBufferData(GL_ARRAY_BUFFER, psize * sizeof(ParticleVertex), parts, GL_STATIC_DRAW);		
+	glBufferData(GL_ARRAY_BUFFER, psize * sizeof(ParticleVertex), parts, GL_STREAM_COPY_ARB);		
 
 	glBindBuffer(GL_ARRAY_BUFFER, retval.vbo[1]);
-	glBufferData(GL_ARRAY_BUFFER, psize * sizeof(ParticleVertex), parts, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, psize * sizeof(ParticleVertex), parts, GL_STREAM_COPY_ARB);
 	
 	// Unbind the vertex array object for now, it won't be needed for a while
 	glBindVertexArray(0);	
+
+	glEnable(GL_PROGRAM_POINT_SIZE);
 
 	return retval;
 }

@@ -131,7 +131,7 @@ CubeTexture loadCubeMap(const char * path_Xpos, const char * path_Xneg, const ch
 	int w, h, c;
 	const void **pixels = new const void *;
 
-	//stbi_set_flip_vertically_on_load(false);
+	stbi_set_flip_vertically_on_load(false);
 
 	pixels[0] = stbi_load(path_Xpos, &w, &h, &c, STBI_default);
 	pixels[1] = stbi_load(path_Xneg, &w, &h, &c, STBI_default);

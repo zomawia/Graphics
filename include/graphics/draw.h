@@ -14,6 +14,7 @@ struct Shader;
 struct Framebuffer;
 struct Texture;
 struct ParticleBuffer;
+struct CubeTexture;
 
 void setFlags(int flags);
 
